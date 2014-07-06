@@ -28,6 +28,22 @@ if (!isDedicated) then {
 
 Copy **snap_pro** folder inside your **custom** folder and you are done. Simple as that!
 
+### (Infistar Antihack)
+If you are using Infistar AH, you will need to whitelist these actions:
+
+Open your **AHconfig.sqf** and down at the bottom find **ALLOWED Actions** part. You will need to add 2 static actions and an array of actions, so **PLEASE** follow this carefully:
+
+On very top of the list whitelist snap actions add:
+```c++
+/*  ALLOWED Actions      */ _dayzActions =
+"([
+	s_player_toggleSnap, s_player_toggleSnapSelect,
+	// Rest of Infistar code here!
+```
+Scroll down to the bottom of this array and add this right after `+ s_vehicle_lockunlock` :
+```c++
++ s_player_toggleSnapSelectPoint)";
+```
 
 ###### (Optional)
 
