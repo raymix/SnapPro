@@ -28,6 +28,11 @@ if (!isDedicated) then {
 
 Copy **snap_pro** folder inside your **custom** folder and you are done. Simple as that!
 
+Open your **description.ext** (root of your MPMissions folder), add this to the very bottom:
+```c++
+#include "custom\snap_pro\snappoints.hpp"
+```
+
 ### (Infistar Antihack)
 If you are using Infistar AH, you will need to whitelist these actions:
 
@@ -52,7 +57,7 @@ To disable tutorial text on bottom-right corner, add this to your **init.sqf**:
 snapTutorial = false;
 ```
 
-To only show tutorial text once (per log-in), add this right before closing bracket in line #236 in *snap_buil.sqf*:
+To only show tutorial text once (per log-in), add this right before closing bracket in line #236 in *snap_build.sqf*:
 
 ```c++
 				] spawn bis_fnc_dynamicText;
