@@ -1,4 +1,4 @@
-# Snap Building Pro
+# ![alt text](https://dl.dropboxusercontent.com/u/14423790/snappro.png "Snap Building Pro")
 ___
 
 ## *Installation*
