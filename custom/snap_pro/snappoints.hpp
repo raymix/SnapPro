@@ -2,7 +2,6 @@
 Created by Raymix
 */
 
-// TODO: cinder TOP, DZEI
 
 class SnapBuilding {
 	//Barriers whitelist
