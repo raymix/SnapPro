@@ -85,8 +85,8 @@ class SnapBuilding {
 	class BagFenceRound_DZ: Barrier {
 		points[] = {
 		{0,0,0,"Pivot"},
-		{-1.3,0,0,"Left"},
-		{1.3,0,0,"Right"},
+		{-1.295,0.38,0,"Left"},
+		{1.295,0.38,0,"Right"},
 		{0,0,0.4,"Top"}
 		};
 	};
@@ -228,8 +228,10 @@ class SnapBuilding {
 	class WoodLargeWallWin_DZ: WoodLarge_DZE {};
 	class WoodLargeWallDoor_DZ: WoodLarge_DZE {};
 	class Land_DZE_GarageWoodDoor: WoodLarge_DZE {};
+	class GarageWoodDoor_Preview_DZ: WoodLarge_DZE {};
 	class Land_DZE_GarageWoodDoorLocked: WoodLarge_DZE {};
 	class Land_DZE_LargeWoodDoorLocked: WoodLarge_DZE {};
+	class LargeWoodDoor_Preview_DZ: WoodLarge_DZE {};
 	
 	class Cinder_DZE: FloorsWallsStairs { //All cinder walls and doors
 		points[] = {
