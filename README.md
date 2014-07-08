@@ -33,8 +33,23 @@ Open your **description.ext** (root of your MPMissions folder), add this to the 
 #include "custom\snap_pro\snappoints.hpp"
 ```
 
-### (Infistar Antihack)
-If you are using Infistar AH, you will need to whitelist these actions:
+### Infistar Antihack (07/07/2014 - AH0332A)
+Open your **AHconfig.sqf** and find:
+```c++
+_dayzActions =
+```
+add these actions to it, like this:
+```c++
+/*  ALLOWED Actions      */ _dayzActions =
+[
+	"s_player_toggleSnap","s_player_toggleSnapSelect","s_player_toggleSnapSelectPoint",
+	// rest of infistar code here
+```
+That's it , Congratulations, you are done!
+---
+
+### (Previous versions of Infistar Antihack 04/07/2014)
+If you haven't updated Infistar AH yet, you will need to whitelist these actions:
 
 Open your **AHconfig.sqf** and down at the bottom find **ALLOWED Actions** part. You will need to add 2 static actions and an array of actions, so **PLEASE** follow this carefully:
 
