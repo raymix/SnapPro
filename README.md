@@ -45,6 +45,12 @@ add these actions to it, like this:
 	"s_player_toggleSnap","s_player_toggleSnapSelect","s_player_toggleSnapSelectPoint",
 	// rest of infistar code here
 ```
+
+**Delete** line #19 from **scipts.txt** in new BE filters, otherwise you will get Script restriction #17 kicks:
+```c++
+5 "_Objects = nearestObjects [getPos player, [\"LandVehicle\""
+```
+
 That's it , Congratulations, you are done!
 ---
 
