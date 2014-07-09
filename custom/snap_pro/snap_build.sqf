@@ -1,7 +1,7 @@
-//------------------|
-// Created by Raymix|
-// July 6 2014		|
-//------------------|
+/*-----------------------------------------------------------------------*/
+// Created by Raymix | Commanding Menu by Mudzereli						//
+// July 9 2014															//
+/*-----------------------------------------------------------------------*/
 
 private ["_object","_objectSnapGizmo","_objColorActive","_objColorInactive","_classname","_whitelist","_points","_cfg","_cnt","_pos","_findWhitelisted","_nearbyObject","_posNearby","_selectedAction","_newPos","_pointsNearby","_onWater","_params"];
 //Args
