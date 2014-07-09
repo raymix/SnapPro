@@ -179,7 +179,8 @@ class SnapBuilding {
 		{0,0,0,"Pivot"},
 		{1.56055,-0.78,1.5,"Back"},
 		{1.56055,0.78,1.5,"Front"},
-		{1.73926,0.05,2.9,"Top"}
+		{1.73926,0.05,2.9,"Top"},
+		{-1.73926,0,0,"Bottom"}
 		};
 	};
 	class WoodStairs_Preview_DZ: Stairs_DZE {};
