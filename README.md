@@ -38,14 +38,10 @@ Open your **description.ext** (root of your MPMissions folder), add this to the 
 Copy **snap_pro** folder inside your **custom** folder and you are done. Simple as that!
 
 ## Commanding menus option
-Commanding menus gives you ability to assign mouse wheel actions to your keyboard, which might save you some time while selecting snap points using Manual mode. To enable Commanding menus and disable actions, open your **compiles.sqf** file and change this line like this:
-```c++
-DZE_SNAP_PRO_USE_COMMAND_MENU = true;
-```
+Commanding menus gives you ability to assign mouse wheel actions to your keyboard, which might save you some time while selecting snap points using Manual mode. To toggle between Commanding menu and default Action menu press "-" (Minus button) on your main keyboard.
+
 
 ### Infistar Antihack (07/07/2014 - AH0332A)
-
-**IF** you are using **ACTIONS** (enabled by default):
 
 Open your **AHconfig.sqf** and find:
 ```c++
@@ -60,18 +56,12 @@ add these actions to it, like this:
 	// rest of infistar code here
 ```
 
-**Delete** line #19 from **scipts.txt** in new BE filters, otherwise you will get Script restriction #17 kicks:
-```c++
-5 "_Objects = nearestObjects [getPos player, [\"LandVehicle\""
-```
-
-**IF** you are using commanding menus instead, then:
-Open your **AHconfig.sqf** and set BCM to false:
+Find and set BCM to false:
 ```c++
 /*  BLOCK ALL CMDMenus    */ _BCM = false;
 ```
 
-Now scroll down and find:
+Now scroll back down again and find:
 ```c++
 /*  ALLOWED CMDMenus      */ _cMenu =
 [
@@ -82,11 +72,20 @@ Add this right after `"BTC_Hud"` add comma and whitelist cmd menu like so:
 "BTC_Hud","#USER:DZE_SNAP_PRO_COMMAND_MENU"
 ```
 
+**Delete** line #19 from **scipts.txt** in new BE filters, otherwise you will get Script restriction #17 kicks:
+```c++
+5 "_Objects = nearestObjects [getPos player, [\"LandVehicle\""
+```
 
 That's it , Congratulations, you are done!
 ---
 
 ###### (Optional)
+
+Alternatively to enable CMD menu by default you can open your **compiles.sqf** file and change this line like this:
+```c++
+DZE_SNAP_PRO_USE_COMMAND_MENU = true;
+```
 
 To disable tutorial text on bottom-right corner, add this to your **init.sqf**:
 ```c++
