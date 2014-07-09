@@ -201,4 +201,16 @@ if ((_dikCode == 0x21 and (!_alt and !_ctrl)) or (_dikCode in actionKeys "User6"
 	};
 };
 
+if(_dikCode == 0x0C) then {
+	private["_message"];
+	DZE_SNAP_PRO_USE_COMMAND_MENU = !DZE_SNAP_PRO_USE_COMMAND_MENU;
+	if(DZE_SNAP_PRO_USE_COMMAND_MENU) then {
+		_message = "SNAP PRO: now using COMMANDING MENU";
+	} else {
+		_message = "SNAP PRO: now using SCROLL MENU";
+	};
+	cutText[_message,"PLAIN DOWN"];
+	hint _message;
+};
+
 _handled
