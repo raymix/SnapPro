@@ -20,24 +20,38 @@ call compile preprocessFileLineNumbers "custom\compiles.sqf";							 //Compile c
 
 ```c++
 if (!isDedicated) then {
+	/* Use command menu instead of scroll menu? (default = false) */
+	DZE_SNAP_PRO_USE_COMMAND_MENU = false;
+
+	DZE_SNAP_BUILD_NUMKEYS = [0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0A,0x0B];
+
 	player_build = compile preprocessFileLineNumbers "custom\snap_pro\player_build.sqf";
 	snap_build = compile preprocessFileLineNumbers "custom\snap_pro\snap_build.sqf";
 	dayz_spaceInterrupt = compile preprocessFileLineNumbers "custom\snap_pro\dayz_spaceInterrupt.sqf";
 };
 ```
-
-Copy **snap_pro** folder inside your **custom** folder and you are done. Simple as that!
-
 Open your **description.ext** (root of your MPMissions folder), add this to the very bottom:
 ```c++
 #include "custom\snap_pro\snappoints.hpp"
 ```
 
+Copy **snap_pro** folder inside your **custom** folder and you are done. Simple as that!
+
+## Commanding menus option
+Commanding menus gives you ability to assign mouse wheel actions to your keyboard, which might save you some time while selecting snap points using Manual mode. To enable Commanding menus and disable actions, open your **compiles.sqf** file and change this line like this:
+```c++
+DZE_SNAP_PRO_USE_COMMAND_MENU = true;
+```
+
 ### Infistar Antihack (07/07/2014 - AH0332A)
+
+**IF** you are using **ACTIONS** (enabled by default):
+
 Open your **AHconfig.sqf** and find:
 ```c++
 _dayzActions =
 ```
+
 add these actions to it, like this:
 ```c++
 /*  ALLOWED Actions      */ _dayzActions =
@@ -50,6 +64,24 @@ add these actions to it, like this:
 ```c++
 5 "_Objects = nearestObjects [getPos player, [\"LandVehicle\""
 ```
+
+**IF** you are using commanding menus instead, then:
+Open your **AHconfig.sqf** and set BCM to false:
+```c++
+/*  BLOCK ALL CMDMenus    */ _BCM = false;
+```
+
+Now scroll down and find:
+```c++
+/*  ALLOWED CMDMenus      */ _cMenu =
+[
+```
+
+Add this right after `"BTC_Hud"` add comma and whitelist cmd menu like so:
+```c++
+"BTC_Hud","#USER:DZE_SNAP_PRO_COMMAND_MENU"
+```
+
 
 That's it , Congratulations, you are done!
 ---
