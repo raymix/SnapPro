@@ -209,8 +209,8 @@ if(_dikCode == 0x0C) then {
 	} else {
 		_message = "SNAP PRO: now using SCROLL MENU";
 	};
-	cutText[_message,"PLAIN DOWN"];
-	hint _message;
+	systemChat _message;
+	DZE_cancelBuilding = true;
 };
 
 _handled

@@ -202,7 +202,7 @@ fnc_initSnapTutorial = {
 	Add snapTutorial = false; to your init.sqf to disable this tutorial completely.
 	You can also add this bool to the end of this function to only show tutorial once per player login (not recommended)
 */
-	private ["_bldTxtSwitch","_bldTxtEnable","_bldTxtClrO","_bldTxtClrC","_bldTxtClrW","_bldTxtClrR","_bldTxtClrG","_bldTxtSz","_bldTxtSzT","_bldTxtShdw","_bldTxtAlgnL","_bldTxtUndrln","_bldTxtBold","_bldTxtFinal","_bldTxtStringTitle","_bldTxtStringSD","_bldTxtStringSE","_bldTxtStringSA","_bldTxtStringSM","_bldTxtStringPG","_bldTxtStringAPG","_bldTxtStringCPG","_bldTxtStringQE","_bldTxtStringQEF","_bldTxtStringFD","_bldTxtStringFS"];
+	private ["_bldTxtSwitch","_bldTxtEnable","_bldTxtClrO","_bldTxtClrC","_bldTxtClrW","_bldTxtClrR","_bldTxtClrG","_bldTxtSz","_bldTxtSzT","_bldTxtShdw","_bldTxtAlgnL","_bldTxtUndrln","_bldTxtBold","_bldTxtFinal","_bldTxtStringTitle","_bldTxtStringSD","_bldTxtStringSE","_bldTxtStringSA","_bldTxtStringSM","_bldTxtStringPG","_bldTxtStringAPG","_bldTxtStringCPG","_bldTxtStringQE","_bldTxtStringQEF","_bldTxtStringFD","_bldTxtStringFS","_bldTxtTglTxt","_bldTxtStringTgl"];
 		if (isNil "snapTutorial") then { 
 			_bldTxtSwitch = _this select 0;
 			_bldTxtEnable = _this select 1;
@@ -218,6 +218,8 @@ fnc_initSnapTutorial = {
 			_bldTxtUndrln = "underline='true'";
 			_bldTxtBold = "font='Zeppelin33'"; //Bold text
 			_bldTxtFinal = "";
+			_bldTxtTglTxt = "";
+			if (DZE_SNAP_PRO_USE_COMMAND_MENU) then {_bldTxtTglTxt = "CMD menu";} else {_bldTxtTglTxt = "Actions";};
 			
 			//Delete on init
 			800 cutRsc ["Default", "PLAIN"];
@@ -235,11 +237,12 @@ fnc_initSnapTutorial = {
 				_bldTxtStringCPG = format["<t %1%3%4%5>[Ctrl]+[PgUP / PgDOWN]<t %2>: Adjust height of object by 1cm</t></t><br />",_bldTxtClrC,_bldTxtClrW,_bldTxtSzT,_bldTxtShdw,_bldTxtAlgnL];
 				_bldTxtStringQE = format["<t %1%3%4%5>[Q / E]<t %2>: Rotate object 180 degrees while holding.</t></t><br />",_bldTxtClrC,_bldTxtClrW,_bldTxtSzT,_bldTxtShdw,_bldTxtAlgnL];
 				_bldTxtStringQEF = format["<t %1%3%4%5>[Q / E]<t %2>: Rotate object 45 degrees while dropped or snapped.</t></t><br /><br />",_bldTxtClrC,_bldTxtClrW,_bldTxtSzT,_bldTxtShdw,_bldTxtAlgnL];
-				_bldTxtStringFD = format["<t %1%3%4%5>[F]<t %2>: Drop / Pick up object.</t></t><br />",_bldTxtClrO,_bldTxtClrW,_bldTxtSzT,_bldTxtShdw,_bldTxtAlgnL];
-				_bldTxtStringFS = format["<t %1%3%4%5>[F]<t %2>: Snap /Pick up object.</t></t><br />",_bldTxtClrO,_bldTxtClrW,_bldTxtSzT,_bldTxtShdw,_bldTxtAlgnL];
+				_bldTxtStringFD = format["<t %1%3%4%5>[F]<t %2>: Drop / Pick up object.</t></t><br /><br />",_bldTxtClrO,_bldTxtClrW,_bldTxtSzT,_bldTxtShdw,_bldTxtAlgnL];
+				_bldTxtStringFS = format["<t %1%3%4%5>[F]<t %2>: Snap /Pick up object.</t></t><br /><br />",_bldTxtClrO,_bldTxtClrW,_bldTxtSzT,_bldTxtShdw,_bldTxtAlgnL];
+				_bldTxtStringTgl = format["<t %1%4%5%6>[Menu mode]<t %2> %7:</t> <t %3>Press [-] (Minus key) to change mode.</t></t>",_bldTxtClrC,_bldTxtClrG,_bldTxtClrW,_bldTxtSzT,_bldTxtShdw,_bldTxtAlgnL,_bldTxtTglTxt];
 				switch (_bldTxtSwitch) do {
 					case "init": {
-						_bldTxtFinal = _bldTxtStringTitle + _bldTxtStringSD + _bldTxtStringPG + _bldTxtStringAPG + _bldTxtStringCPG + _bldTxtStringQE + _bldTxtStringQEF + _bldTxtStringFD;
+						_bldTxtFinal = _bldTxtStringTitle + _bldTxtStringSD + _bldTxtStringPG + _bldTxtStringAPG + _bldTxtStringCPG + _bldTxtStringQE + _bldTxtStringQEF + _bldTxtStringFD + _bldTxtStringTgl;
 					};
 					case "OnAuto": {
 						_bldTxtFinal = _bldTxtStringTitle + _bldTxtStringSE + _bldTxtStringSA + _bldTxtStringPG + _bldTxtStringAPG + _bldTxtStringCPG + _bldTxtStringQE + _bldTxtStringQEF + _bldTxtStringFS;
@@ -269,7 +272,16 @@ switch (snapActionState) do {
 		[1,0,0] call fnc_snapActionCleanup;
 		[] spawn {
 		while {true} do {
-			if(!DZE_ActionInProgress) exitWith {call fnc_initSnapPointsCleanup;[0,0,0] call fnc_snapActionCleanup; ["",false] call fnc_initSnapTutorial; snapActionState = "OFF";};
+			if(!DZE_ActionInProgress) exitWith {
+				call fnc_initSnapPointsCleanup;
+				[0,0,0] call fnc_snapActionCleanup;
+				["",false] call fnc_initSnapTutorial; snapActionState = "OFF";
+				if (DZE_SNAP_PRO_USE_COMMAND_MENU) then { //cleanup default actions
+					player removeAction s_player_toggleSnap; 
+					player removeAction s_player_toggleSnapSelect; 
+					{player removeAction _x;} count s_player_toggleSnapSelectPoint;
+				};
+			};
 			sleep 2;
 			};
 		};
