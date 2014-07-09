@@ -3,13 +3,18 @@
 // July 6 2014		|
 //------------------|
 
-private ["_object","_objectSnapGizmo","_objColorActive","_objColorInactive","_classname","_whitelist","_points","_cfg","_cnt","_pos","_findWhitelisted","_nearbyObject","_posNearby","_selectedAction","_newPos","_pointsNearby","_onWater"];
+private ["_object","_objectSnapGizmo","_objColorActive","_objColorInactive","_classname","_whitelist","_points","_cfg","_cnt","_pos","_findWhitelisted","_nearbyObject","_posNearby","_selectedAction","_newPos","_pointsNearby","_onWater","_params"];
 //Args
-snapActionState = _this select 3 select 0;
-_object = _this select 3 select 1;
-_classname = _this select 3 select 2;
-_objectHelper = _this select 3 select 3;
-_selectedAction = _this select 3 select 4;
+if (!DZE_SNAP_PRO_USE_COMMAND_MENU) then {
+	_params = _this select 3;
+} else {
+	_params = _this;
+};
+snapActionState = _params select 0;
+_object         = _params select 1;
+_classname      = _params select 2;
+_objectHelper   = _params select 3;
+_selectedAction = _params select 4;
 
 //Snap config file
 _cfg = (missionConfigFile >> "SnapBuilding" >> _classname);
@@ -26,22 +31,44 @@ fnc_snapActionCleanup = {
 	_s1 = _this select 0;
 	_s2 = _this select 1;
 	_s3 = _this select 2;
-	player removeAction s_player_toggleSnap;
-	player removeAction s_player_toggleSnapSelect;
-	{player removeAction _x;} count s_player_toggleSnapSelectPoint;
-	if (_s1 > 0) then {
-		s_player_toggleSnap = player addaction [format[("<t color=""#ffffff"">" + ("Snap: %1") +"</t>"),snapActionState],"custom\snap_pro\snap_build.sqf",[snapActionState,_object,_classname,_objectHelper],6,false,true];
-	};
-	if (_s2 > 0) then {
-		s_player_toggleSnapSelect = player addaction [format[("<t color=""#ffffff"">" + ("Snap Point: %1") +"</t>"),snapActionStateSelect],"custom\snap_pro\snap_build.sqf",[snapActionStateSelect,_object,_classname,_objectHelper],5,false,true];
-	};
-	if (_s3 > 0) then {
-		s_player_toggleSnapSelectPoint=[];
-		_cnt = 0;
-		{snapActions = player addaction [format[("<t color=""#ffffff"">" + ("%1)Select: %2") +"</t>"),_cnt,_x select 3],"custom\snap_pro\snap_build.sqf",["Selected",_object,_classname,_objectHelper,_cnt],4,false,false];
-		s_player_toggleSnapSelectPoint set [count s_player_toggleSnapSelectPoint,snapActions];
-		_cnt = _cnt+1;
-	}count _points;
+	if (!DZE_SNAP_PRO_USE_COMMAND_MENU) then {
+		player removeAction s_player_toggleSnap;
+		player removeAction s_player_toggleSnapSelect;
+		{player removeAction _x;} count s_player_toggleSnapSelectPoint;
+		if (_s1 > 0) then {
+			s_player_toggleSnap = player addaction [format[("<t color=""#ffffff"">" + ("Snap: %1") +"</t>"),snapActionState],"custom\snap_pro\snap_build.sqf",[snapActionState,_object,_classname,_objectHelper],6,false,true];
+		};
+		if (_s2 > 0) then {
+			s_player_toggleSnapSelect = player addaction [format[("<t color=""#ffffff"">" + ("Snap Point: %1") +"</t>"),snapActionStateSelect],"custom\snap_pro\snap_build.sqf",[snapActionStateSelect,_object,_classname,_objectHelper],5,false,true];
+		};
+		if (_s3 > 0) then {
+			s_player_toggleSnapSelectPoint=[];
+			_cnt = 0;
+			{
+				snapActions = player addaction [format[("<t color=""#ffffff"">" + ("%1)Select: %2") +"</t>"),_cnt,_x select 3],"custom\snap_pro\snap_build.sqf",["Selected",_object,_classname,_objectHelper,_cnt],4,false,false];
+				s_player_toggleSnapSelectPoint set [count s_player_toggleSnapSelectPoint,snapActions];
+				_cnt = _cnt+1;
+			}count _points;
+		};
+	} else {
+		DZE_SNAP_PRO_CURR_OBJECT       = _object;
+		DZE_SNAP_PRO_CURR_CLASSNAME    = _classname;
+		DZE_SNAP_PRO_CURR_OBJECTHELPER = _objectHelper;
+		DZE_SNAP_PRO_COMMAND_MENU = [
+			["",true]
+		];
+		if(_s1 > 0) then {
+			DZE_SNAP_PRO_COMMAND_MENU set [count DZE_SNAP_PRO_COMMAND_MENU,[format["Snap: %1",snapActionState], [DZE_SNAP_BUILD_NUMKEYS select ((count DZE_SNAP_PRO_COMMAND_MENU) - 1)], "", -5, [["expression", "[snapActionState,DZE_SNAP_PRO_CURR_OBJECT,DZE_SNAP_PRO_CURR_CLASSNAME,DZE_SNAP_PRO_CURR_OBJECTHELPER] execVM 'custom\snap_pro\snap_build.sqf';"]], "1", "1"]];
+		};
+		if(_s2 > 0) then {
+			DZE_SNAP_PRO_COMMAND_MENU set [count DZE_SNAP_PRO_COMMAND_MENU, [format["Snap Point: %1",snapActionStateSelect], [DZE_SNAP_BUILD_NUMKEYS select ((count DZE_SNAP_PRO_COMMAND_MENU) - 1)], "", -5, [["expression", "[snapActionStateSelect,DZE_SNAP_PRO_CURR_OBJECT,DZE_SNAP_PRO_CURR_CLASSNAME,DZE_SNAP_PRO_CURR_OBJECTHELPER] execVM 'custom\snap_pro\snap_build.sqf';"]], "1", "1"]];
+		};
+		if(_s3 > 0) then {
+			{
+				DZE_SNAP_PRO_COMMAND_MENU set [count DZE_SNAP_PRO_COMMAND_MENU, [format["Select: %1",_x select 3], [DZE_SNAP_BUILD_NUMKEYS select ((count DZE_SNAP_PRO_COMMAND_MENU) - 1)], "", -5, [["expression", format["['Selected',DZE_SNAP_PRO_CURR_OBJECT,DZE_SNAP_PRO_CURR_CLASSNAME,DZE_SNAP_PRO_CURR_OBJECTHELPER,%1] execVM 'custom\snap_pro\snap_build.sqf';",_foreachindex]]], "1", "1"]];
+			} forEach _points;
+		};
+		showCommandingMenu "#USER:DZE_SNAP_PRO_COMMAND_MENU";
 	};
 };
 
@@ -290,5 +317,6 @@ switch (snapActionState) do {
 	};
 	_cnt = _cnt+1;
 }count snapGizmos;
+	if (DZE_SNAP_PRO_USE_COMMAND_MENU) then {snapActionState = "ON"; [1,1,1] call fnc_snapActionCleanup;};
 	};
 };
