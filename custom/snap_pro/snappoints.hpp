@@ -271,11 +271,11 @@ class SnapBuilding {
 	
 	class MetalFloor_Preview_DZ: FloorsWallsStairs { //fix for broken offsets in ghost
 		points[] = {
-		{0,0,0,"Pivot"},
-		{0, -2.64, 0,"Back"},
-		{0, 2.64, 0,"Front"},
-		{-2.64, 0, 0,"Left"},
-		{2.64, 0, 0,"Right"}
+		{0,0,0.011,"Pivot"},
+		{0, -2.64, 0.009,"Back"},
+		{0, 2.64, 0.009,"Front"},
+		{-2.64, 0, 0.009,"Left"},
+		{2.64, 0, 0.009,"Right"}
 		};
 	};
 	class MetalFloor_DZ: FloorsWallsStairs{
