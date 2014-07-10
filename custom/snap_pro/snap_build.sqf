@@ -273,6 +273,13 @@ switch (snapActionState) do {
 			sleep 2;
 			};
 		};
+		if (DZE_SNAP_PRO_DEFAULT_SNAP_ON) then {
+			if (DZE_SNAP_PRO_USE_COMMAND_MENU) then {
+				[snapActionState,_object,_classname,_objectHelper] execVM 'custom\snap_pro\snap_build.sqf';
+			} else {
+				["","","",[snapActionState,_object,_classname,_objectHelper]] execVM 'custom\snap_pro\snap_build.sqf';
+			};
+		};
 	};
 	case "OFF": {
 		["OnAuto",true] call fnc_initSnapTutorial;
