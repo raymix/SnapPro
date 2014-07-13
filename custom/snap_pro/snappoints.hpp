@@ -183,6 +183,7 @@ class SnapBuilding {
 		{-1.73926,0.05,0,"Bottom"}
 		};
 	};
+	class WoodStairs_DZ: Stairs_DZE {};
 	class WoodStairs_Preview_DZ: Stairs_DZE {};
 	class WoodStairsSans_Preview_DZ: Stairs_DZE {};
 	class WoodStairsSans_DZ: Stairs_DZE {};
