@@ -40,8 +40,8 @@ Copy **snap_pro** folder inside your **custom** folder and you are done. Simple 
 ## Commanding menus option
 Commanding menus gives you ability to assign mouse wheel actions to your keyboard, which might save you some time while selecting snap points using Manual mode. To toggle between Commanding menu and default Action menu press "-" (Minus button) on your main keyboard.
 
-
 ### Infistar Antihack (07/07/2014 - AH0332A)
+##### Newest Infistar AH (13/07/2014) comes with actions whitelisted by default, you only need to add CMDmenus if you are using them.
 
 Open your **AHconfig.sqf** and find:
 ```c++
