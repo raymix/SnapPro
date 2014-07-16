@@ -196,9 +196,6 @@ if (_dikCode == 0x39 or (_dikCode in actionKeys "User19")) then {
 // F key
 if ((_dikCode == 0x21 and (!_alt and !_ctrl)) or (_dikCode in actionKeys "User6")) then {
 	DZE_F = true;
-	if(!(isNil "DZE_SNAP_PRO_COMMAND_MENU")) then {
-		showCommandingMenu "#USER:DZE_SNAP_PRO_COMMAND_MENU";
-	};
 };
 
 if(_dikCode == 0x0C) then {
