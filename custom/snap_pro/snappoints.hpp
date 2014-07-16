@@ -204,6 +204,7 @@ class SnapBuilding {
 	class WoodSmallWallWin_DZ: WoodSmall_DZE {};
 	class Land_DZE_WoodDoor: WoodSmall_DZE {};
 	class Land_DZE_WoodDoorLocked: WoodSmall_DZE {};
+	class WoodDoor_Preview_DZ: WoodSmall_DZE{};
 	
 	class WoodLarge_DZE: FloorsWallsStairs { //Large wood walls
 		points[] = {

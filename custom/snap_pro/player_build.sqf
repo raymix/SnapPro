@@ -5,7 +5,7 @@
 private ["_helperColor","_objectHelper","_objectHelperDir","_objectHelperPos","_canDo",
 "_location","_dir","_classname","_item","_hasrequireditem","_missing","_hastoolweapon","_cancel","_reason","_started","_finished","_animState","_isMedic","_dis","_sfx","_hasbuilditem","_tmpbuilt","_onLadder","_isWater","_require","_text","_offset","_IsNearPlot","_isOk","_location1","_location2","_counter","_limit","_proceed","_num_removed","_position","_object","_canBuildOnPlot","_friendlies","_nearestPole","_ownerID","_findNearestPoles","_findNearestPole","_distance","_classnametmp","_ghost","_isPole","_needText","_lockable","_zheightchanged","_rotate","_combination_1","_combination_2","_combination_3","_combination_4","_combination","_combination_1_Display","_combinationDisplay","_zheightdirection","_abort","_isNear","_need","_needNear","_vehicle","_inVehicle","_requireplot","_objHDiff","_isLandFireDZ","_isTankTrap"];
 
-if(DZE_ActionInProgress) exitWith { cutText [(localize "str_epoch_player_40") , "PLAIN DOWN"];};
+if(DZE_ActionInProgress) exitWith { cutText [(localize "str_epoch_player_40") , "PLAIN DOWN"]; };
 DZE_ActionInProgress = true;
 
 // disallow building if too many objects are found within 30m
@@ -137,28 +137,28 @@ _findNearestPole = [];
 	if (alive _x) then {
 		_findNearestPole set [(count _findNearestPole),_x];
 	};
-} foreach _findNearestPoles;
+} count _findNearestPoles;
 
 _IsNearPlot = count (_findNearestPole);
 
-// If item is plot pole and another one exists within 45m
-if(_isPole and _IsNearPlot > 0) exitWith {  DZE_ActionInProgress = false; cutText [(localize "str_epoch_player_44") , "PLAIN DOWN"];};
+// If item is plot pole && another one exists within 45m
+if(_isPole && _IsNearPlot > 0) exitWith {  DZE_ActionInProgress = false; cutText [(localize "str_epoch_player_44") , "PLAIN DOWN"]; };
 
 if(_IsNearPlot == 0) then {
 
 	// Allow building of plot
-	if(_requireplot == 0 or _isLandFireDZ) then {
+	if(_requireplot == 0 || _isLandFireDZ) then {
 		_canBuildOnPlot = true;
 	};
 
 } else {
-	// Since there are plots nearby we check for ownership and then for friend status
+	// Since there are plots nearby we check for ownership && then for friend status
 
-	// check nearby plots ownership and then for friend status
+	// check nearby plots ownership && then for friend status
 	_nearestPole = _findNearestPole select 0;
 
 	// Find owner
-	_ownerID = _nearestPole getVariable["CharacterID","0"];
+	_ownerID = _nearestPole getVariable ["CharacterID","0"];
 
 	// diag_log format["DEBUG BUILDING: %1 = %2", dayz_characterID, _ownerID];
 
@@ -182,19 +182,19 @@ if(_IsNearPlot == 0) then {
 };
 
 // _message
-if(!_canBuildOnPlot) exitWith {  DZE_ActionInProgress = false; cutText [format[(localize "STR_EPOCH_PLAYER_135"),_needText,_distance] , "PLAIN DOWN"];};
+if(!_canBuildOnPlot) exitWith {  DZE_ActionInProgress = false; cutText [format[(localize "STR_EPOCH_PLAYER_135"),_needText,_distance] , "PLAIN DOWN"]; };
 
 _missing = "";
 _hasrequireditem = true;
 {
 	_hastoolweapon = _x in weapons player;
-	if(!_hastoolweapon) exitWith { _hasrequireditem = false; _missing = getText (configFile >> "cfgWeapons" >> _x >> "displayName"); }
-} forEach _require;
+	if(!_hastoolweapon) exitWith { _hasrequireditem = false; _missing = getText (configFile >> "cfgWeapons" >> _x >> "displayName"); };
+} count _require;
 
 _hasbuilditem = _this in magazines player;
-if (!_hasbuilditem) exitWith {DZE_ActionInProgress = false; cutText [format[(localize "str_player_31"),_text,"build"] , "PLAIN DOWN"];};
+if (!_hasbuilditem) exitWith {DZE_ActionInProgress = false; cutText [format[(localize "str_player_31"),_text,"build"] , "PLAIN DOWN"]; };
 
-if (!_hasrequireditem) exitWith {DZE_ActionInProgress = false; cutText [format[(localize "str_epoch_player_137"),_missing] , "PLAIN DOWN"];};
+if (!_hasrequireditem) exitWith {DZE_ActionInProgress = false; cutText [format[(localize "str_epoch_player_137"),_missing] , "PLAIN DOWN"]; };
 if (_hasrequireditem) then {
 
 	_location = [0,0,0];
@@ -352,7 +352,7 @@ if (isClass (missionConfigFile >> "SnapBuilding" >> _classname)) then {
 
 			_objectHelper setDir (getDir _objectHelper);
 
-			if((_isAllowedUnderGround == 0) and ((_position select 2) < 0)) then {
+			if((_isAllowedUnderGround == 0) && ((_position select 2) < 0)) then {
 				_position set [2,0];
 			};
 
@@ -384,6 +384,32 @@ if (isClass (missionConfigFile >> "SnapBuilding" >> _classname)) then {
 			_isOk = false;
 			_cancel = true;
 			_reason = "You've moved to far away from where you started building (within 10 meters)";
+			detach _object;
+			deleteVehicle _object;
+			detach _objectHelper;
+			deleteVehicle _objectHelper;
+		};
+		
+		if(_IsNearPlot == 0) then {
+			_findNearestPoles = nearestObjects [_objectHelper, ["Plastic_Pole_EP1_DZ"], 30];
+			_nearestPole = _findNearestPoles select 0;
+			_objectHelperPos = getPosATL _objectHelper;
+			if (_objectHelperPos distance _nearestPole < 30) exitWith {
+				_isOk = false; 
+				_cancel = true;
+				_reason = "You cannot enter plot pole area while building is in progress";
+				detach _object;
+				deleteVehicle _object;
+				detach _objectHelper;
+				deleteVehicle _objectHelper;
+			};
+		};
+			
+		
+		if(_location1 distance _objectHelperPos > 10) exitWith {
+			_isOk = false;
+			_cancel = true;
+			_reason = "Object is placed to far away from where you started building (within 10 meters)";
 			detach _object;
 			deleteVehicle _object;
 			detach _objectHelper;
@@ -441,7 +467,7 @@ if (isClass (missionConfigFile >> "SnapBuilding" >> _classname)) then {
 		// Get position based on object
 		_location = _position;
 
-		if((_isAllowedUnderGround == 0) and ((_location select 2) < 0)) then {
+		if((_isAllowedUnderGround == 0) && ((_location select 2) < 0)) then {
 			_location set [2,0];
 		};
 
@@ -486,11 +512,11 @@ if (isClass (missionConfigFile >> "SnapBuilding" >> _classname)) then {
 				if (_isMedic) then {
 					_started = true;
 				};
-				if (_started and !_isMedic) then {
+				if (_started && !_isMedic) then {
 					r_doLoop = false;
 					_finished = true;
 				};
-				if (r_interrupt or (player getVariable["combattimeout", 0] >= time)) then {
+				if (r_interrupt || (player getVariable["combattimeout", 0] >= time)) then {
 					r_doLoop = false;
 				};
 				if (DZE_cancelBuilding) exitWith {
