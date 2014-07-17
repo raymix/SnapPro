@@ -3,7 +3,7 @@
 // July 9 2014															//
 /*-----------------------------------------------------------------------*/
 
-private ["_object","_objectSnapGizmo","_objColorActive","_objColorInactive","_classname","_whitelist","_points","_cfg","_cnt","_pos","_findWhitelisted","_nearbyObject","_posNearby","_selectedAction","_newPos","_pointsNearby","_onWater","_params"];
+private ["_object","_objectSnapGizmo","_objColorActive","_objColorInactive","_classname","_whitelist","_points","_radius","_cfg","_cnt","_pos","_findWhitelisted","_nearbyObject","_posNearby","_selectedAction","_newPos","_pointsNearby","_onWater","_params"];
 //Args
 if (!DZE_SNAP_PRO_USE_COMMAND_MENU) then {
 	_params = _this select 3;
@@ -20,6 +20,7 @@ _selectedAction = _params select 4;
 _cfg = (missionConfigFile >> "SnapBuilding" >> _classname);
 _whitelist = getArray (_cfg >> "snapTo");
 _points = getArray (_cfg >> "points");
+_radius = getNumber (_cfg >> "radius");
 
 //colors
 _objColorActive = "#(argb,8,8,3)color(0,0.92,0.06,1,ca)";
@@ -85,7 +86,7 @@ fnc_initSnapPoints = {
 fnc_initSnapPointsNearby = {
 	_pos = getPosATL _object;
 	_findWhitelisted = []; _pointsNearby = [];
-	_findWhitelisted = nearestObjects [_pos,_whitelist,10]-[_object];
+	_findWhitelisted = nearestObjects [_pos,_whitelist,_radius]-[_object];
 	snapGizmosNearby = [];	
 	{	
 		_nearbyObject = _x;
