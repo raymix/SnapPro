@@ -92,7 +92,7 @@ To disable tutorial text on bottom-right corner, add this to your **init.sqf**:
 snapTutorial = false;
 ```
 
-To only show tutorial text once (per log-in), add this right before closing bracket in line #236 in *snap_build.sqf*:
+To only show tutorial text once (per log-in), add this right before closing bracket in line #266 in *snap_build.sqf*:
 
 ```c++
 				] spawn bis_fnc_dynamicText;
