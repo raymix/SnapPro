@@ -85,7 +85,7 @@ fnc_initSnapPoints = {
 fnc_initSnapPointsNearby = {
 	_pos = getPosATL _object;
 	_findWhitelisted = []; _pointsNearby = [];
-	_findWhitelisted = nearestObjects [_pos,_whitelist,15]-[_object];
+	_findWhitelisted = nearestObjects [_pos,_whitelist,10]-[_object];
 	snapGizmosNearby = [];	
 	{	
 		_nearbyObject = _x;
