@@ -20,11 +20,6 @@ call compile preprocessFileLineNumbers "custom\compiles.sqf";							 //Compile c
 
 ```c++
 if (!isDedicated) then {
-	/* Use command menu instead of scroll menu? (default = false) */
-	DZE_SNAP_PRO_USE_COMMAND_MENU = false;
-
-	DZE_SNAP_BUILD_NUMKEYS = [0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0A,0x0B];
-
 	player_build = compile preprocessFileLineNumbers "custom\snap_pro\player_build.sqf";
 	snap_build = compile preprocessFileLineNumbers "custom\snap_pro\snap_build.sqf";
 	dayz_spaceInterrupt = compile preprocessFileLineNumbers "custom\snap_pro\dayz_spaceInterrupt.sqf";
@@ -37,62 +32,20 @@ Open your **description.ext** (root of your MPMissions folder), add this to the 
 
 Copy **snap_pro** folder inside your **custom** folder and you are done. Simple as that!
 
-## Commanding menus option
-Commanding menus gives you ability to assign mouse wheel actions to your keyboard, which might save you some time while selecting snap points using Manual mode. To toggle between Commanding menu and default Action menu press "-" (Minus button) on your main keyboard.
-
-### Infistar Antihack (07/07/2014 - AH0332A)
-##### Newest Infistar AH (13/07/2014) comes with actions whitelisted by default, you only need to add CMDmenus if you are using them.
-
-Open your **AHconfig.sqf** and find:
-```c++
-_dayzActions =
-```
-
-add these actions to it, like this:
-```c++
-/*  ALLOWED Actions      */ _dayzActions =
-[
-	"s_player_toggleSnap","s_player_toggleSnapSelect","s_player_toggleSnapSelectPoint",
-	// rest of infistar code here
-```
-
-Find and set BCM to false:
-```c++
-/*  BLOCK ALL CMDMenus    */ _BCM = false;
-```
-
-Now scroll back down again and find:
-```c++
-/*  ALLOWED CMDMenus      */ _cMenu =
-[
-```
-
-Add this right after `"BTC_Hud"` add comma and whitelist cmd menu like so:
-```c++
-"BTC_Hud","#USER:DZE_SNAP_PRO_COMMAND_MENU"
-```
-
-**Delete** line #19 from **scipts.txt** in new BE filters, otherwise you will get Script restriction #17 kicks:
-```c++
-5 "_Objects = nearestObjects [getPos player, [\"LandVehicle\""
-```
+### Infistar Antihack
+##### Newest Infistar AH (13/07/2014) comes with actions whitelisted by default
 
 That's it , Congratulations, you are done!
 ---
 
 ###### (Optional)
 
-Alternatively to enable CMD menu by default you can open your **compiles.sqf** file and change this line like this:
-```c++
-DZE_SNAP_PRO_USE_COMMAND_MENU = true;
-```
-
 To disable tutorial text on bottom-right corner, add this to your **init.sqf**:
 ```c++
 snapTutorial = false;
 ```
 
-To only show tutorial text once (per log-in), add this right before closing bracket in line #266 in *snap_build.sqf*:
+To only show tutorial text once (per log-in), add this right before closing bracket in line #236 in *snap_build.sqf*:
 
 ```c++
 				] spawn bis_fnc_dynamicText;
