@@ -1,20 +1,15 @@
-/*-----------------------------------------------------------------------*/
-// Created by Raymix | Commanding Menu by Mudzereli						//
-// July 9 2014															//
-/*-----------------------------------------------------------------------*/
+//------------------|
+// Created by Raymix|
+// July 6 2014		|
+//------------------|
 
-private ["_object","_objectSnapGizmo","_objColorActive","_objColorInactive","_classname","_whitelist","_points","_radius","_cfg","_cnt","_pos","_findWhitelisted","_nearbyObject","_posNearby","_selectedAction","_newPos","_pointsNearby","_onWater","_params"];
+private ["_object","_objectSnapGizmo","_objColorActive","_objColorInactive","_classname","_whitelist","_points","_cfg","_cnt","_pos","_findWhitelisted","_nearbyObject","_posNearby","_selectedAction","_newPos","_pointsNearby","_onWater"];
 //Args
-if (!DZE_SNAP_PRO_USE_COMMAND_MENU) then {
-	_params = _this select 3;
-} else {
-	_params = _this;
-};
-snapActionState = _params select 0;
-_object         = _params select 1;
-_classname      = _params select 2;
-_objectHelper   = _params select 3;
-_selectedAction = _params select 4;
+snapActionState = _this select 3 select 0;
+_object = _this select 3 select 1;
+_classname = _this select 3 select 2;
+_objectHelper = _this select 3 select 3;
+_selectedAction = _this select 3 select 4;
 
 //Snap config file
 _cfg = (missionConfigFile >> "SnapBuilding" >> _classname);
@@ -32,44 +27,22 @@ fnc_snapActionCleanup = {
 	_s1 = _this select 0;
 	_s2 = _this select 1;
 	_s3 = _this select 2;
-	if (!DZE_SNAP_PRO_USE_COMMAND_MENU) then {
-		player removeAction s_player_toggleSnap; s_player_toggleSnap = -1;
-		player removeAction s_player_toggleSnapSelect; s_player_toggleSnapSelect = -1;
-		if (count s_player_toggleSnapSelectPoint != 0) then {{player removeAction _x;} count s_player_toggleSnapSelectPoint; s_player_toggleSnapSelectPoint=[]; snapActions = -1;};
-		if (_s1 > 0) then {
-			s_player_toggleSnap = player addaction [format[("<t color=""#ffffff"">" + ("Snap: %1") +"</t>"),snapActionState],"custom\snap_pro\snap_build.sqf",[snapActionState,_object,_classname,_objectHelper],6,false,true];
-		};
-		if (_s2 > 0) then {
-			s_player_toggleSnapSelect = player addaction [format[("<t color=""#ffffff"">" + ("Snap Point: %1") +"</t>"),snapActionStateSelect],"custom\snap_pro\snap_build.sqf",[snapActionStateSelect,_object,_classname,_objectHelper],5,false,true];
-		};
-		if (_s3 > 0) then {
-			s_player_toggleSnapSelectPoint=[];
-			_cnt = 0;
-			{
-				snapActions = player addaction [format[("<t color=""#ffffff"">" + ("%1)Select: %2") +"</t>"),_cnt,_x select 3],"custom\snap_pro\snap_build.sqf",["Selected",_object,_classname,_objectHelper,_cnt],4,false,false];
-				s_player_toggleSnapSelectPoint set [count s_player_toggleSnapSelectPoint,snapActions];
-				_cnt = _cnt+1;
-			}count _points;
-		};
-	} else {
-		DZE_SNAP_PRO_CURR_OBJECT       = _object;
-		DZE_SNAP_PRO_CURR_CLASSNAME    = _classname;
-		DZE_SNAP_PRO_CURR_OBJECTHELPER = _objectHelper;
-		DZE_SNAP_PRO_COMMAND_MENU = [
-			["",true]
-		];
-		if(_s1 > 0) then {
-			DZE_SNAP_PRO_COMMAND_MENU set [count DZE_SNAP_PRO_COMMAND_MENU,[format["Snap: %1",snapActionState], [DZE_SNAP_BUILD_NUMKEYS select ((count DZE_SNAP_PRO_COMMAND_MENU) - 1)], "", -5, [["expression", "[snapActionState,DZE_SNAP_PRO_CURR_OBJECT,DZE_SNAP_PRO_CURR_CLASSNAME,DZE_SNAP_PRO_CURR_OBJECTHELPER] execVM 'custom\snap_pro\snap_build.sqf';"]], "1", "1"]];
-		};
-		if(_s2 > 0) then {
-			DZE_SNAP_PRO_COMMAND_MENU set [count DZE_SNAP_PRO_COMMAND_MENU, [format["Snap Point: %1",snapActionStateSelect], [DZE_SNAP_BUILD_NUMKEYS select ((count DZE_SNAP_PRO_COMMAND_MENU) - 1)], "", -5, [["expression", "[snapActionStateSelect,DZE_SNAP_PRO_CURR_OBJECT,DZE_SNAP_PRO_CURR_CLASSNAME,DZE_SNAP_PRO_CURR_OBJECTHELPER] execVM 'custom\snap_pro\snap_build.sqf';"]], "1", "1"]];
-		};
-		if(_s3 > 0) then {
-			{
-				DZE_SNAP_PRO_COMMAND_MENU set [count DZE_SNAP_PRO_COMMAND_MENU, [format["Select: %1",_x select 3], [DZE_SNAP_BUILD_NUMKEYS select ((count DZE_SNAP_PRO_COMMAND_MENU) - 1)], "", -5, [["expression", format["['Selected',DZE_SNAP_PRO_CURR_OBJECT,DZE_SNAP_PRO_CURR_CLASSNAME,DZE_SNAP_PRO_CURR_OBJECTHELPER,%1] execVM 'custom\snap_pro\snap_build.sqf';",_foreachindex]]], "1", "1"]];
-			} forEach _points;
-		};
-		showCommandingMenu "#USER:DZE_SNAP_PRO_COMMAND_MENU";
+	player removeAction s_player_toggleSnap; s_player_toggleSnap = -1;
+	player removeAction s_player_toggleSnapSelect; s_player_toggleSnapSelect = -1;
+	if (count s_player_toggleSnapSelectPoint != 0) then {{player removeAction _x;} count s_player_toggleSnapSelectPoint; s_player_toggleSnapSelectPoint=[]; snapActions = -1;};
+	if (_s1 > 0) then {
+		s_player_toggleSnap = player addaction [format[("<t color=""#ffffff"">" + ("Snap: %1") +"</t>"),snapActionState],"custom\snap_pro\snap_build.sqf",[snapActionState,_object,_classname,_objectHelper],6,false,true];
+	};
+	if (_s2 > 0) then {
+		s_player_toggleSnapSelect = player addaction [format[("<t color=""#ffffff"">" + ("Snap Point: %1") +"</t>"),snapActionStateSelect],"custom\snap_pro\snap_build.sqf",[snapActionStateSelect,_object,_classname,_objectHelper],5,false,true];
+	};
+	if (_s3 > 0) then {
+		s_player_toggleSnapSelectPoint=[];
+		_cnt = 0;
+		{snapActions = player addaction [format[("<t color=""#ffffff"">" + ("%1)Select: %2") +"</t>"),_cnt,_x select 3],"custom\snap_pro\snap_build.sqf",["Selected",_object,_classname,_objectHelper,_cnt],4,false,false];
+		s_player_toggleSnapSelectPoint set [count s_player_toggleSnapSelectPoint,snapActions];
+		_cnt = _cnt+1;
+	}count _points;
 	};
 };
 
@@ -203,7 +176,7 @@ fnc_initSnapTutorial = {
 	Add snapTutorial = false; to your init.sqf to disable this tutorial completely.
 	You can also add this bool to the end of this function to only show tutorial once per player login (not recommended)
 */
-	private ["_bldTxtSwitch","_bldTxtEnable","_bldTxtClrO","_bldTxtClrC","_bldTxtClrW","_bldTxtClrR","_bldTxtClrG","_bldTxtSz","_bldTxtSzT","_bldTxtShdw","_bldTxtAlgnL","_bldTxtUndrln","_bldTxtBold","_bldTxtFinal","_bldTxtStringTitle","_bldTxtStringSD","_bldTxtStringSE","_bldTxtStringSA","_bldTxtStringSM","_bldTxtStringPG","_bldTxtStringAPG","_bldTxtStringCPG","_bldTxtStringQE","_bldTxtStringQEF","_bldTxtStringFD","_bldTxtStringFS","_bldTxtTglTxt","_bldTxtStringTgl"];
+	private ["_bldTxtSwitch","_bldTxtEnable","_bldTxtClrO","_bldTxtClrC","_bldTxtClrW","_bldTxtClrR","_bldTxtClrG","_bldTxtSz","_bldTxtSzT","_bldTxtShdw","_bldTxtAlgnL","_bldTxtUndrln","_bldTxtBold","_bldTxtFinal","_bldTxtStringTitle","_bldTxtStringSD","_bldTxtStringSE","_bldTxtStringSA","_bldTxtStringSM","_bldTxtStringPG","_bldTxtStringAPG","_bldTxtStringCPG","_bldTxtStringQE","_bldTxtStringQEF","_bldTxtStringFD","_bldTxtStringFS"];
 		if (isNil "snapTutorial") then { 
 			_bldTxtSwitch = _this select 0;
 			_bldTxtEnable = _this select 1;
@@ -219,8 +192,6 @@ fnc_initSnapTutorial = {
 			_bldTxtUndrln = "underline='true'";
 			_bldTxtBold = "font='Zeppelin33'"; //Bold text
 			_bldTxtFinal = "";
-			_bldTxtTglTxt = "";
-			if (DZE_SNAP_PRO_USE_COMMAND_MENU) then {_bldTxtTglTxt = "CMD menu";} else {_bldTxtTglTxt = "Actions";};
 			
 			//Delete on init
 			800 cutRsc ["Default", "PLAIN"];
@@ -238,12 +209,11 @@ fnc_initSnapTutorial = {
 				_bldTxtStringCPG = format["<t %1%3%4%5>[Ctrl]+[PgUP / PgDOWN]<t %2>: Adjust height of object by 1cm</t></t><br />",_bldTxtClrC,_bldTxtClrW,_bldTxtSzT,_bldTxtShdw,_bldTxtAlgnL];
 				_bldTxtStringQE = format["<t %1%3%4%5>[Q / E]<t %2>: Rotate object 180 degrees while holding.</t></t><br />",_bldTxtClrC,_bldTxtClrW,_bldTxtSzT,_bldTxtShdw,_bldTxtAlgnL];
 				_bldTxtStringQEF = format["<t %1%3%4%5>[Q / E]<t %2>: Rotate object 45 degrees while dropped or snapped.</t></t><br /><br />",_bldTxtClrC,_bldTxtClrW,_bldTxtSzT,_bldTxtShdw,_bldTxtAlgnL];
-				_bldTxtStringFD = format["<t %1%3%4%5>[F]<t %2>: Drop / Pick up object.</t></t><br /><br />",_bldTxtClrO,_bldTxtClrW,_bldTxtSzT,_bldTxtShdw,_bldTxtAlgnL];
-				_bldTxtStringFS = format["<t %1%3%4%5>[F]<t %2>: Snap /Pick up object.</t></t><br /><br />",_bldTxtClrO,_bldTxtClrW,_bldTxtSzT,_bldTxtShdw,_bldTxtAlgnL];
-				_bldTxtStringTgl = format["<t %1%4%5%6>[Menu mode]<t %2> %7:</t> <t %3>Press [-] (Minus key) to change mode.</t></t>",_bldTxtClrC,_bldTxtClrG,_bldTxtClrW,_bldTxtSzT,_bldTxtShdw,_bldTxtAlgnL,_bldTxtTglTxt];
+				_bldTxtStringFD = format["<t %1%3%4%5>[F]<t %2>: Drop / Pick up object.</t></t><br />",_bldTxtClrO,_bldTxtClrW,_bldTxtSzT,_bldTxtShdw,_bldTxtAlgnL];
+				_bldTxtStringFS = format["<t %1%3%4%5>[F]<t %2>: Snap /Pick up object.</t></t><br />",_bldTxtClrO,_bldTxtClrW,_bldTxtSzT,_bldTxtShdw,_bldTxtAlgnL];
 				switch (_bldTxtSwitch) do {
 					case "init": {
-						_bldTxtFinal = _bldTxtStringTitle + _bldTxtStringSD + _bldTxtStringPG + _bldTxtStringAPG + _bldTxtStringCPG + _bldTxtStringQE + _bldTxtStringQEF + _bldTxtStringFD + _bldTxtStringTgl;
+						_bldTxtFinal = _bldTxtStringTitle + _bldTxtStringSD + _bldTxtStringPG + _bldTxtStringAPG + _bldTxtStringCPG + _bldTxtStringQE + _bldTxtStringQEF + _bldTxtStringFD;
 					};
 					case "OnAuto": {
 						_bldTxtFinal = _bldTxtStringTitle + _bldTxtStringSE + _bldTxtStringSA + _bldTxtStringPG + _bldTxtStringAPG + _bldTxtStringCPG + _bldTxtStringQE + _bldTxtStringQEF + _bldTxtStringFS;
@@ -273,16 +243,7 @@ switch (snapActionState) do {
 		[1,0,0] call fnc_snapActionCleanup;
 		[] spawn {
 		while {true} do {
-			if(!DZE_ActionInProgress) exitWith {
-				call fnc_initSnapPointsCleanup;
-				[0,0,0] call fnc_snapActionCleanup;
-				["",false] call fnc_initSnapTutorial; snapActionState = "OFF";
-				if (DZE_SNAP_PRO_USE_COMMAND_MENU) then { //cleanup default actions
-					player removeAction s_player_toggleSnap; s_player_toggleSnap = -1;
-					player removeAction s_player_toggleSnapSelect; s_player_toggleSnapSelect = -1;
-					if (count s_player_toggleSnapSelectPoint != 0) then {{player removeAction _x;} count s_player_toggleSnapSelectPoint; s_player_toggleSnapSelectPoint=[]; snapActions = -1;};
-				};
-			};
+			if(!DZE_ActionInProgress) exitWith {call fnc_initSnapPointsCleanup;[0,0,0] call fnc_snapActionCleanup; ["",false] call fnc_initSnapTutorial; snapActionState = "OFF";};
 			sleep 2;
 			};
 		};
@@ -330,6 +291,5 @@ switch (snapActionState) do {
 	};
 	_cnt = _cnt+1;
 }count snapGizmos;
-	if (DZE_SNAP_PRO_USE_COMMAND_MENU) then {snapActionState = "ON"; [1,1,1] call fnc_snapActionCleanup;};
 	};
 };

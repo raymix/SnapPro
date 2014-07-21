@@ -222,12 +222,8 @@ if (_hasrequireditem) then {
 
 	_objHDiff = 0;
 
-if (isClass (missionConfigFile >> "SnapBuilding" >> _classname)) then {
-	if(!DZE_SNAP_PRO_USE_COMMAND_MENU) then {
-		["","","",["Init",_object,_classname,_objectHelper]] spawn snap_build;
-	} else {
-		["Init",_object,_classname,_objectHelper] spawn snap_build;
-	};
+if (isClass (missionConfigFile >> "SnapBuilding" >> _classname)) then {	
+	["","","",["Init",_object,_classname,_objectHelper]] spawn snap_build;
 };
 	
 	while {_isOk} do {

@@ -7,10 +7,6 @@ if (_dikCode in[0x02,0x03,0x04,0x58,0x57,0x44,0x43,0x42,0x41,0x40,0x3F,0x3E,0x3D
 	_handled = true;
 };
 
-if (DZE_SNAP_PRO_USE_COMMAND_MENU && _dikCode in DZE_SNAP_BUILD_NUMKEYS) then {
-	_handled = false;
-};
-
 if ((_dikCode == 0x3E or _dikCode == 0x0F or _dikCode == 0xD3)) then {
 	if(diag_tickTime - dayz_lastCheckBit > 10) then {
 		dayz_lastCheckBit = diag_tickTime;
@@ -196,18 +192,6 @@ if (_dikCode == 0x39 or (_dikCode in actionKeys "User19")) then {
 // F key
 if ((_dikCode == 0x21 and (!_alt and !_ctrl)) or (_dikCode in actionKeys "User6")) then {
 	DZE_F = true;
-};
-
-if(_dikCode == 0x0C) then {
-	private["_message"];
-	DZE_SNAP_PRO_USE_COMMAND_MENU = !DZE_SNAP_PRO_USE_COMMAND_MENU;
-	if(DZE_SNAP_PRO_USE_COMMAND_MENU) then {
-		_message = "SNAP PRO: now using COMMANDING MENU";
-	} else {
-		_message = "SNAP PRO: now using SCROLL MENU";
-	};
-	systemChat _message;
-	DZE_cancelBuilding = true;
 };
 
 _handled
