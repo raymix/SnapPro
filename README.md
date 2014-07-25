@@ -1,7 +1,7 @@
 # ![alt text](https://dl.dropboxusercontent.com/u/14423790/snappro.png "Snap Building Pro")
 ___
 
-## *Installation*
+## *Installation* `ver 1.2.1`
 
 Create and add new **compiles.sqf** file (you can reuse an old one if you already have it) and add this to **init.sqf** file:
 
@@ -54,3 +54,17 @@ To only show tutorial text once (per log-in), add this right before closing brac
 	snapTutorial = false;	
 };
 ```
+## Changelog
+|Notes										|Date				|Version	|
+| ------------------------------------------|:-----------------:| ---------:|
+|Anti-grief temporarily removed				|23/07/2014			|1.2.1		|
+|CMD menus removed and pushed to a new repo	|21/07/2014			|1.2.0		|
+|Snap point radius is now config based		|18/07/2014			|1.1.6		|
+|Build range and anti-grief fix				|16/07/2014			|1.1.5		|
+|Missing stairs with support in config		|14/07/2014			|1.1.4		|
+|Code optimization, vault points added		|12/07/2014			|1.1.3		|
+|Ghost fix for metal floor (GenCamoUGL)		|10/07/2014			|1.1.2		|
+|CMD/Action menu toggle						|09/07/2014			|1.1.1		|
+|CMD menu added	(mudzerelli)				|09/07/2014			|1.1.0		|
+|Missing objects added						|07/07/2014			|1.0.1		|
+|SBP release								|06/07/2014			|1.0.0		|
