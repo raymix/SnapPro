@@ -13,7 +13,7 @@ call compile preprocessFileLineNumbers "\z\addons\dayz_code\init\compiles.sqf";
 Add this line right after, like so:
 ```c++
 call compile preprocessFileLineNumbers "\z\addons\dayz_code\init\compiles.sqf";				//Compile regular functions
-call compile preprocessFileLineNumbers "custom\compiles.sqf";							 //Compile custom compiles
+call compile preprocessFileLineNumbers "custom\snap_pro\compiles.sqf";							 //Compile custom compiles
 ```
 
 **compiles.sqf** can be either found in project folder here on github or you can just create new file and add these lines:
