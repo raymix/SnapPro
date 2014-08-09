@@ -57,7 +57,7 @@ To only show tutorial text once (per log-in), add this right before closing brac
 ## Changelog
 |Notes										|Date				|Version	|
 | ------------------------------------------|:-----------------:| ---------:|
-|Fixed defines, adjustable snap ranges		|23/07/2014			|1.3		|
+|Fixed defines, adjustable snap ranges		|09/08/2014			|1.3		|
 |Anti-grief temporarily removed				|23/07/2014			|1.2.1		|
 |CMD menus removed and pushed to a new repo	|21/07/2014			|1.2.0		|
 |Snap point radius is now config based		|18/07/2014			|1.1.6		|
