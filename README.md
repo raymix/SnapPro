@@ -40,6 +40,14 @@ That's it , Congratulations, you are done!
 
 ###### (Optional)
 
+To adjust ranges, change this variable (negative values will reduce detection range, positive will increase). Will affect performance
+Default value is 0. Safe values are -5, 5, 10 or anything in between.
+Simply add this to your init.sqf somewhere on top:
+
+```c++
+DZE_snapExtraRange = 0;
+```
+
 To disable tutorial text on bottom-right corner, add this to your **init.sqf**:
 ```c++
 snapTutorial = false;
