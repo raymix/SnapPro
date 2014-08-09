@@ -19,8 +19,23 @@ _canBuildOnPlot = false;
 
 _vehicle = vehicle player;
 _inVehicle = (_vehicle != player);
-//snap
-helperDetach = false;
+
+//snap vars -- temporary fix for errors so variables.sqf can be skipped
+if (isNil "snapProVariables") then {
+	if (isNil "DZE_snapExtraRange") then {
+		DZE_snapExtraRange = 0;
+	};
+	s_player_toggleSnap = -1;
+	s_player_toggleSnapSelect = -1;
+	s_player_toggleSnapSelectPoint=[];
+	snapActions = -1;
+	snapGizmos = [];
+	snapGizmosNearby = [];
+	snapProVariables = true; // will skip this statement from now on.
+};
+// snap vars
+
+helperDetach = false; 
 _canDo = (!r_drag_sqf and !r_player_unconscious);
 
 DZE_Q = false;
@@ -364,6 +379,7 @@ if (isClass (missionConfigFile >> "SnapBuilding" >> _classname)) then {
 		sleep 0.5;
 
 		_location2 = getPosATL player;
+		_objectHelperPos = getPosATL _objectHelper;
 
 		if(DZE_5) exitWith {
 			_isOk = false;
