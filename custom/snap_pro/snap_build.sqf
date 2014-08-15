@@ -3,7 +3,7 @@
 // July 6 2014		|
 //------------------|
 
-private ["_object","_objectSnapGizmo","_objColorActive","_objColorInactive","_classname","_whitelist","_points","_cfg","_cnt","_pos","_findWhitelisted","_nearbyObject","_posNearby","_selectedAction","_newPos","_pointsNearby","_onWater"];
+private ["_object","_objectSnapGizmo","_objColorActive","_objColorInactive","_classname","_whitelist","_points","_cfg","_cnt","_pos","_findWhitelisted","_nearbyObject","_posNearby","_selectedAction","_newPos","_pointsNearby","_onWater","_waterBase"];
 //Args
 snapActionState = _this select 3 select 0;
 _object = _this select 3 select 1;
@@ -58,8 +58,10 @@ fnc_initSnapPoints = {
 
 fnc_initSnapPointsNearby = {
 	_pos = getPosATL _object;
-	_findWhitelisted = []; _pointsNearby = [];
-	_findWhitelisted = nearestObjects [_pos,_whitelist,(_radius + DZE_snapExtraRange)]-[_object];
+	_findWhitelisted = []; _pointsNearby = []; _waterBase = 0;
+	_onWater = surfaceIsWater position player;
+	if (_onWater) then { _waterBase = (getPosATL player select 2);};
+	_findWhitelisted = nearestObjects [_pos,_whitelist,(_radius + DZE_snapExtraRange + _waterBase)]-[_object];
 	snapGizmosNearby = [];	
 	{	
 		_nearbyObject = _x;
@@ -199,7 +201,7 @@ fnc_initSnapTutorial = {
 			
 			//Init Tutorial text
 			if (_bldTxtEnable) then {
-				_bldTxtStringTitle = format ["<t %1%2%3%4>Snap Building <t %5%6%7>Pro 1.3</t></t><br />",_bldTxtClrO,_bldTxtSz,_bldTxtShdw,_bldTxtAlgnL,_bldTxtClrW,_bldTxtUndrln,_bldTxtBold];
+				_bldTxtStringTitle = format ["<t %1%2%3%4>Snap Building <t %5%6%7>Pro 1.3.1</t></t><br />",_bldTxtClrO,_bldTxtSz,_bldTxtShdw,_bldTxtAlgnL,_bldTxtClrW,_bldTxtUndrln,_bldTxtBold];
 				_bldTxtStringSD = format["<t %1%4%5%6>[Snap]<t %2> Disabled:</t> <t %3>use action menu to enable.</t></t><br /><br />",_bldTxtClrC,_bldTxtClrR,_bldTxtClrW,_bldTxtSzT,_bldTxtShdw,_bldTxtAlgnL];
 				_bldTxtStringSE = format["<t %1%4%5%6>[Snap]<t %2> Enabled:</t> <t %3>use action menu to disable.</t></t><br /><br />",_bldTxtClrC,_bldTxtClrG,_bldTxtClrW,_bldTxtSzT,_bldTxtShdw,_bldTxtAlgnL];
 				_bldTxtStringSA = format["<t %1%3%4%5>[Snap Point]<t %2> AUTOMATIC: Automatic snap point detection.</t></t><br /><br />",_bldTxtClrC,_bldTxtClrW,_bldTxtSzT,_bldTxtShdw,_bldTxtAlgnL];
