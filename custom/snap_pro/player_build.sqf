@@ -2,28 +2,19 @@
 	DayZ Base Building
 	Made for DayZ Epoch please ask permission to use/edit/distrubute email vbawol@veteranbastards.com.
 */
-private ["_helperColor","_objectHelper","_objectHelperDir","_objectHelperPos","_canDo",
+private ["_helperColor","_objectHelper","_objectHelperDir","_objectHelperPos","_canDo", "_pos", "_cnt",
 "_location","_dir","_classname","_item","_hasrequireditem","_missing","_hastoolweapon","_cancel","_reason","_started","_finished","_animState","_isMedic","_dis","_sfx","_hasbuilditem","_tmpbuilt","_onLadder","_isWater","_require","_text","_offset","_IsNearPlot","_isOk","_location1","_location2","_counter","_limit","_proceed","_num_removed","_position","_object","_canBuildOnPlot","_friendlies","_nearestPole","_ownerID","_findNearestPoles","_findNearestPole","_distance","_classnametmp","_ghost","_isPole","_needText","_lockable","_zheightchanged","_rotate","_combination_1","_combination_2","_combination_3","_combination_4","_combination","_combination_1_Display","_combinationDisplay","_zheightdirection","_abort","_isNear","_need","_needNear","_vehicle","_inVehicle","_requireplot","_objHDiff","_isLandFireDZ","_isTankTrap"];
 
 if(DZE_ActionInProgress) exitWith { cutText [(localize "str_epoch_player_40") , "PLAIN DOWN"]; };
 DZE_ActionInProgress = true;
 
-// disallow building if too many objects are found within 30m
-if((count ((getPosATL player) nearObjects ["All",30])) >= DZE_BuildingLimit) exitWith {DZE_ActionInProgress = false; cutText [(localize "str_epoch_player_41"), "PLAIN DOWN"];};
-
-_onLadder =		(getNumber (configFile >> "CfgMovesMaleSdr" >> "States" >> (animationState player) >> "onLadder")) == 1;
-_isWater = 		dayz_isSwimming;
-_cancel = false;
-_reason = "";
-_canBuildOnPlot = false;
-
-_vehicle = vehicle player;
-_inVehicle = (_vehicle != player);
-
 //snap vars -- temporary fix for errors so variables.sqf can be skipped
 if (isNil "snapProVariables") then {
 	if (isNil "DZE_snapExtraRange") then {
 		DZE_snapExtraRange = 0;
+	};
+	if (isNil "DZE_checkNearbyRadius") then {
+		DZE_checkNearbyRadius = 30;
 	};
 	s_player_toggleSnap = -1;
 	s_player_toggleSnapSelect = -1;
@@ -34,6 +25,23 @@ if (isNil "snapProVariables") then {
 	snapProVariables = true; // will skip this statement from now on.
 };
 // snap vars
+
+// disallow building if too many objects are found within (30m by default) add DZE_checkNearbyRadius = 30; to your init.sqf to change
+_pos = [player] call FNC_GetPos;
+_cnt = count (_pos nearObjects ["All",DZE_checkNearbyRadius]); 
+ if (_cnt >= DZE_BuildingLimit) exitWith { //end script if too many objects nearby
+ 	DZE_ActionInProgress = false;
+ 	cutText [(localize "str_epoch_player_41"), "PLAIN DOWN"];
+ };
+
+_onLadder =		(getNumber (configFile >> "CfgMovesMaleSdr" >> "States" >> (animationState player) >> "onLadder")) == 1;
+_isWater = 		dayz_isSwimming;
+_cancel = false;
+_reason = "";
+_canBuildOnPlot = false;
+
+_vehicle = vehicle player;
+_inVehicle = (_vehicle != player);
 
 helperDetach = false; 
 _canDo = (!r_drag_sqf and !r_player_unconscious);
@@ -75,7 +83,7 @@ _needNear = 	getArray (configFile >> "CfgMagazines" >> _item >> "ItemActions" >>
 		case "fire":
 		{
 			_distance = 3;
-			_isNear = {inflamed _x} count (getPosATL player nearObjects _distance);
+			_isNear = {inflamed _x} count (_pos nearObjects _distance);
 			if(_isNear == 0) then {
 				_abort = true;
 				_reason = "fire";
@@ -84,7 +92,7 @@ _needNear = 	getArray (configFile >> "CfgMagazines" >> _item >> "ItemActions" >>
 		case "workshop":
 		{
 			_distance = 3;
-			_isNear = count (nearestObjects [player, ["Wooden_shed_DZ","WoodShack_DZ","WorkBench_DZ"], _distance]);
+			_isNear = count (nearestObjects [_pos, ["Wooden_shed_DZ","WoodShack_DZ","WorkBench_DZ"], _distance]);
 			if(_isNear == 0) then {
 				_abort = true;
 				_reason = "workshop";
@@ -93,7 +101,7 @@ _needNear = 	getArray (configFile >> "CfgMagazines" >> _item >> "ItemActions" >>
 		case "fueltank":
 		{
 			_distance = 30;
-			_isNear = count (nearestObjects [player, dayz_fuelsources, _distance]);
+			_isNear = count (nearestObjects [_pos, dayz_fuelsources, _distance]);
 			if(_isNear == 0) then {
 				_abort = true;
 				_reason = "fuel tank";
@@ -216,7 +224,7 @@ if (_hasrequireditem) then {
 	_isOk = true;
 
 	// get inital players position
-	_location1 = getPosATL player;
+	_location1 = [player] call FNC_GetPos;
 	_dir = getDir player;
 
 	// if ghost preview available use that instead
@@ -231,10 +239,8 @@ if (_hasrequireditem) then {
 	_objectHelper setobjecttexture [0,_helperColor];
 	_objectHelper attachTo [player,_offset];
 	_object attachTo [_objectHelper,[0,0,0]];
-	_position = getPosATL _objectHelper;
+	_position = [_objectHelper] call FNC_GetPos;
 	
-	//cutText [(localize "str_epoch_player_45"), "PLAIN DOWN"];
-
 	_objHDiff = 0;
 
 if (isClass (missionConfigFile >> "SnapBuilding" >> _classname)) then {	
@@ -280,35 +286,26 @@ if (isClass (missionConfigFile >> "SnapBuilding" >> _classname)) then {
 		if (DZE_4) then {
 			_rotate = true;
 			DZE_4 = false;
-			if (helperDetach) then {
-				_dir = -45;
-			} else {
-				_dir = 180;
-			};
+			_dir = -45;
 		};
 		if (DZE_6) then {
 			_rotate = true;
 			DZE_6 = false;
-			if (helperDetach) then {
-				_dir = 45;
-			} else {
-				_dir = 0;
-			};
+			_dir = 45;
 		};
 		
 		if (DZE_F and _canDo) then {	
 			if (helperDetach) then {
-			_objectHelperDir = getDir _objectHelper; 
-			_objectHelper attachTo [player];
-			_objectHelper setDir _objectHelperDir-(getDir player);
-			helperDetach = false;
+				_objectHelperDir = getDir _objectHelper; 
+				_objectHelper attachTo [player];
+				_objectHelper setDir _objectHelperDir-(getDir player);
+				helperDetach = false;
 			} else {
-			_objectHelperPos = getPosATL _objectHelper;
-			detach _objectHelper;			
-			_objectHelper setPosATL _objectHelperPos;
-			_objectHelperDir = getDir _objectHelper;
-			_objectHelper setVelocity [0,0,0]; //fix sliding glitch
-			helperDetach = true;
+				_objectHelperDir = getDir _objectHelper;
+				detach _objectHelper;
+				[_objectHelper]	call FNC_GetSetPos;
+				_objectHelper setVelocity [0,0,0]; //fix sliding glitch
+				helperDetach = true;
 			};
 			DZE_F = false;
 		};
@@ -316,23 +313,27 @@ if (isClass (missionConfigFile >> "SnapBuilding" >> _classname)) then {
 		if(_rotate) then {
 			if (helperDetach) then {
 				_objectHelperDir = getDir _objectHelper;
-				_objectHelperPos = getPosATL _objectHelper;
 				_objectHelper setDir _objectHelperDir+_dir;
-				_objectHelper setPosATL _objectHelperPos;
+				[_objectHelper]	call FNC_GetSetPos;
 			} else {
-				_objectHelper setDir _dir;
-				_objectHelper setPosATL _position;
-				//diag_log format["DEBUG Rotate BUILDING POS: %1", _position];			
+				detach _objectHelper;
+				_objectHelperDir = getDir _objectHelper;
+				_objectHelper setDir _objectHelperDir+_dir;
+				[_objectHelper]	call FNC_GetSetPos;
+				_objectHelperDir = getDir _objectHelper;
+				_objectHelper attachTo [player];
+				_objectHelper setDir _objectHelperDir-(getDir player);		
 			};
 
 		};
 
 		if(_zheightchanged) then {
 			if (!helperDetach) then {
-			detach _objectHelper;
+				detach _objectHelper;
+				_objectHelperDir = getDir _objectHelper;
 			};
 
-			_position = getPosATL _objectHelper;
+			_position = [_objectHelper] call FNC_GetPos;
 
 			if(_zheightdirection == "up") then {
 				_position set [2,((_position select 2)+0.1)];
@@ -361,32 +362,32 @@ if (isClass (missionConfigFile >> "SnapBuilding" >> _classname)) then {
 				_objHDiff = _objHDiff - 0.01;
 			};
 
-			_objectHelper setDir (getDir _objectHelper);
-
 			if((_isAllowedUnderGround == 0) && ((_position select 2) < 0)) then {
 				_position set [2,0];
 			};
 
-			_objectHelper setPosATL _position;
-
-			//diag_log format["DEBUG Change BUILDING POS: %1", _position];
+			if (surfaceIsWater _position) then {
+				_objectHelper setPosASL _position;
+			} else {
+				_objectHelper setPosATL _position;
+			};
 
 			if (!helperDetach) then {
 			_objectHelper attachTo [player];
+			_objectHelper setDir _objectHelperDir-(getDir player);
 			};
 		};
 
 		sleep 0.5;
 
-		_location2 = getPosATL player;
-		_objectHelperPos = getPosATL _objectHelper;
+		_location2 = [player] call FNC_GetPos;
+		_objectHelperPos = [_objectHelper] call FNC_GetPos;
 
 		if(DZE_5) exitWith {
 			_isOk = false;
+			_position = [_object] call FNC_GetPos;
 			detach _object;
 			_dir = getDir _object;
-			_position = getPosATL _object;
-			//diag_log format["DEBUG BUILDING POS: %1", _position];
 			deleteVehicle _object;
 			detach _objectHelper;
 			deleteVehicle _objectHelper;
@@ -467,8 +468,11 @@ if (isClass (missionConfigFile >> "SnapBuilding" >> _classname)) then {
 			_location set [2,0];
 		};
 
-		_tmpbuilt setPosATL _location;
-
+		if (surfaceIsWater _location) then {
+			_tmpbuilt setPosASL _location;
+		} else {
+			_tmpbuilt setPosATL _location;
+		};
 
 		cutText [format[(localize "str_epoch_player_138"),_text], "PLAIN DOWN"];
 

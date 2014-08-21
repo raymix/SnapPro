@@ -1,7 +1,7 @@
 # ![alt text](https://dl.dropboxusercontent.com/u/14423790/snappro.png "Snap Building Pro")
 ___
 
-## *Installation* `ver 1.3.1`
+## *Installation* `ver 1.4`
 
 Create and add new **compiles.sqf** file (you can reuse an old one if you already have it) and add this to **init.sqf** file:
 
@@ -65,6 +65,7 @@ To only show tutorial text once (per log-in), add this right before closing brac
 ## Changelog
 |Notes										|Date				|Version	|
 | ------------------------------------------|:-----------------:| ---------:|
+|ASL based player/snap_build, fixes, extras	|21/08/2014			|1.4		|
 |Full support for water bases				|15/08/2014			|1.3.1		|
 |Fixed defines, adjustable snap ranges		|09/08/2014			|1.3		|
 |Anti-grief temporarily removed				|23/07/2014			|1.2.1		|
